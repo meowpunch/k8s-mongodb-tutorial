@@ -120,7 +120,7 @@ $ minikube service mongo-express-service
 
 ```
 
-## Implementation
+## Configuration
 If you check it out [mongodb official image](https://hub.docker.com/_/mongo) on dockerhub
 - standard mongodb port `27017`
 - you can adjust environment variables `MONGO_INITDB_ROOT_IUSERNAME` and `MONGO_INITDB_ROOT_PASSWORD`
