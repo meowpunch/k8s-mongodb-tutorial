@@ -4,12 +4,12 @@ This demo was implemented, just following [Nana k8s tutorial](https://www.youtub
 - deploy two applications, mongodb(database) and mongo express(web application), on kubernetes
 
 ## Architecture Overview
-- Deployments / Pods: containerized applications are running on pods.
-- Services: expose an application on a set of pods as a network service.
+- [Deployments](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/) / [Pods](https://kubernetes.io/docs/concepts/workloads/pods/): containerized applications are running on pods.
+- [Services](https://kubernetes.io/docs/concepts/services-networking/service/): expose an application on a set of pods as a network service.
     - mongodb - internal service
     - mongo express - external service
-- ConfigMap: storing configuration variables e.g. db url
-- Secret: storing secret env variables e.g. db username and pwd
+- [ConfigMap](https://kubernetes.io/docs/concepts/configuration/configmap/): storing configuration variables e.g. db url
+- [Secret](https://kubernetes.io/docs/concepts/configuration/secret/): storing secret env variables e.g. db username and pwd
 
 ## Environment
 ```shell
@@ -22,11 +22,28 @@ Server Version: version.Info{Major:"1", Minor:"22", GitVersion:"v1.22.3", GitCom
 ```
 
 ## Get Started
-- get all the components inside the cluster
-```shell
-$ kubectl get all
-NAME                 TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
-service/kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   53d
-```
+If you check it out [mongodb official image](https://hub.docker.com/_/mongo) on dockerhub
+- standard mongodb port `27017`
+- you can adjust environment variables `MONGO_INITDB_ROOT_IUSERNAME` and `MONGO_INITDB_ROOT_PASSWORD`
+  - I will manage root username and pwd as Secret
 
+### Secret
+ 
+ - with [Basic authentication Secret](https://kubernetes.io/docs/concepts/configuration/secret/#basic-authentication-secret)
+```shell
+$ echo -n 'db username' | base64
+ZGIgdXNlcm5hbWU=
+
+$ echo -n 'db password' | base64
+ZGIgcGFzc3dvcmQ=
+```
+```shell
+$ kubectl apply -f mongodb-secret.yml 
+secret/mongodb-secret created
+
+$ kubectl get secret
+NAME                  TYPE                                  DATA   AGE
+default-token-8tgsg   kubernetes.io/service-account-token   3      53d
+mongodb-secret        Opaque                                2      10s
+```
 
